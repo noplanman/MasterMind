@@ -98,7 +98,8 @@ begin
   else
   begin
     //Farbwiederholung nicht erlaubt
-    for i := 0 to AnzFarben - 1 do SwapFarben(Vorgabe[i], Vorgabe[random(AnzFarben)]);
+    for i := 0 to AnzFarben - 1 do
+    SwapFarben(Vorgabe[i], Vorgabe[random(AnzFarben)]);
   end;
 end;
 

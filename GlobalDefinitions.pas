@@ -21,15 +21,20 @@ const
   cAnzFarben = 4;
 
 type
-  TMuster = Array[0..5] of TColor;
+  TMuster   = Array[0..5] of TColor;
   TResultat = Record
               Platz: Word;
               Farbe: Word;
               end;
   TpEintrag = ^TEintrag;
-  TEintrag =  Record
+  TEintrag  = Record
               Muster: TMuster;
               Resultat: TResultat;
+              end;
+  TpHS      = ^THS;
+  THS       = Record
+              Name: String;
+              Score: integer;
               end;
 
 var

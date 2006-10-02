@@ -17,7 +17,7 @@ object Form1: TForm1
   Scaled = False
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
-  PixelsPerInch = 96
+  PixelsPerInch = 120
   TextHeight = 16
   object Panel1: TPanel
     Left = 0
@@ -367,6 +367,13 @@ object Form1: TForm1
         F340A4201A28A004F2D7D2808074A28A005DA28E94514090B4514503131CD2D1
         450014514500145145001451450014514500145145007FFFD9}
     end
+    object Label1: TLabel
+      Left = 512
+      Top = 392
+      Width = 70
+      Height = 16
+      Caption = '(c)Armando'
+    end
     object Panel2: TPanel
       Left = 376
       Top = 136
@@ -447,6 +454,7 @@ object Form1: TForm1
       item
         Width = 1000
       end>
+    SimplePanel = False
   end
   object MainMenu1: TMainMenu
     object Datei1: TMenuItem
@@ -468,6 +476,10 @@ object Form1: TForm1
         Caption = 'Schwierigkeitsgrad'
         OnClick = SchwierigkeitsgradClick
       end
+    end
+    object HighScores1: TMenuItem
+      Caption = 'High Scores'
+      OnClick = HighScores1Click
     end
     object answer: TMenuItem
       Caption = '0'

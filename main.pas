@@ -55,6 +55,8 @@ type
     lblten: TLabel;
     lblone: TLabel;
     Image1: TImage;
+    HighScores1: TMenuItem;
+    Label1: TLabel;
     procedure ButtonClick(Sender: TObject);
     procedure sbtryClick(Sender: TObject);
     procedure FarbeClick(Sender: TObject);
@@ -68,6 +70,7 @@ type
     procedure SchwierigkeitsgradClick(Sender: TObject);
     procedure answerClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure HighScores1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -82,7 +85,7 @@ var
   versuche : integer;
 
 implementation
-uses Solution, Success, Options, Reg;
+uses Solution, Success, Options, Reg, HighScoreNameEntry, HighScores;
 
 {$R *.dfm}
 const
@@ -160,6 +163,7 @@ end;
 
 procedure NewGame;
 begin
+  //Leert die HistoryList
   HistoryList.Clear;
   redrawgame(AnzFarben);
   form1.sbtry.Enabled := true;
@@ -168,6 +172,7 @@ begin
   form1.lblten.Caption := '0';
   form1.lblhundred.Caption := '0';
   versuche := 0;
+  //Setzt alle Bilder der Buttons zurück
   form1.sb1.Glyph := form1.none.Bitmap;
   form1.sb2.Glyph := form1.none.Bitmap;
   form1.sb3.Glyph := form1.none.Bitmap;
@@ -183,6 +188,7 @@ var
   ten : integer;
   hundred : integer;
 begin
+  //Der 'versuche' Zähler
   one := versuche mod 10;
   ten := (versuche div 10) mod 10;
   hundred := (versuche div 100) mod 10;
@@ -193,6 +199,8 @@ end;
 
 procedure NewGameClick;
 begin
+   {Falls kein Spiel angefangen oder das Spiel bereits beendet ist,
+    Startet es das Spiel ohne Abfage neu}
   if (not form1.sbtry.Enabled) or (versuche = 0) or
      (application.MessageBox
      ('Spiel verwerfen und neu starten?', 'Neu Starten?', 36) = IDYES)
@@ -216,6 +224,7 @@ var
   i : integer;
   y : integer;
 begin
+  //Ausgabe der farbigen Punkte auf dem Bildschirm
   sbachtel := form1.sb1.Width div 8;
   sb := form1.sb1.Width;
   y := form1.history.Height div 15;
@@ -291,6 +300,13 @@ begin
                                  'Mit ' + inttostr(versuche) + ' Versuche';
     frmsuccess.ShowModal;
     sbtry.Enabled := false;
+    if Frm_HSNE.ShowModal = mrOK
+    then
+    begin
+      //Die Highscore wird gespeichert
+      SaveScores(Frm_HSNE.edithsne.Text, versuche);
+      Frm_HS.ShowModal;
+    end;
   end;
 end;
 
@@ -314,8 +330,8 @@ end;
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   Init;
-  {Stellt die Breite des Canvas history auf die maximale Breite die es benötigt
-   Komischer Effekt in Delphi wenn man es nicht zuerst setzt!}
+  { Stellt die Breite des Canvas history auf die maximale Breite die es benötigt
+    Komischer Effekt in Delphi wenn man es nicht zuerst setzt!}
   Dummy;
   //Liste erstellen, StatusBar aktualisieren und das Spiel neu starten
   HistoryList := TList.Create;
@@ -357,7 +373,8 @@ begin
   //Abfrage ob man wirklich aufgeben will
   if sbtry.Enabled then
   begin
-    if application.MessageBox('Lösung anzeigen und Spiel neu starten?', 'Aufgeben?', 36)
+    if application.MessageBox
+       ('Lösung anzeigen und Spiel neu starten?', 'Aufgeben?', 36)
        = IDYES then
     begin
       Resign;
@@ -400,6 +417,14 @@ begin
   //Das Form kann erst geschlossen werden wenn man Ja klickt
   canclose :=
            application.MessageBox('Spiel Verlassen?', 'Verlassen?', 36) = IDYES;
+end;
+
+procedure TForm1.HighScores1Click(Sender: TObject);
+begin
+  //HighScores aus der Registry lesen und dann anzeigen
+  reg.ReadScores;
+  reg.WriteScores;
+  Frm_HS.ShowModal;
 end;
 
 end.
